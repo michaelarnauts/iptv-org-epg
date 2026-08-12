@@ -1,0 +1,293 @@
+{
+  "from": 1786420800000,
+  "to": 1786507200000,
+  "timestamp": 1786456051235,
+  "channels": [
+    {
+      "name": "VTM",
+      "seoKey": "vtm",
+      "uuid": "d8659669-b964-414c-aa9c-e31d8d15696b",
+      "channelLogoUrl": "https://images4.persgroep.net/rcs/5z5qDnGS5kcM_mNLtWSlF_JPvd0/diocontent/248189477/_fitwidth/500?appId=da11c75db9b73ea0f41f0cd0da631c71",
+      "broadcasts": [
+        {
+          "uuid": "7469fc8d-02d6-4bfb-96a7-b161231f694a",
+          "playableUuid": "c00dc40e-149b-43de-8023-9cbc699a809b",
+          "programUuid": null,
+          "channelUuid": "d8659669-b964-414c-aa9c-e31d8d15696b",
+          "from": 1786406400000,
+          "to": 1786421100000,
+          "technicalFrom": 1786406400000,
+          "technicalTo": 1786421078520,
+          "contentFrom": 1786406400000,
+          "contentTo": 1786421078520,
+          "transmissionId": null,
+          "title": "Geen uitzending",
+          "alternativeMainTitle": "Geen uitzending",
+          "alternativeDetailTitle": "Geen uitzending",
+          "productionCountries": [],
+          "live": false,
+          "rerun": false,
+          "prime": false,
+          "pillar": null,
+          "legalIcons": [],
+          "descriptors": [],
+          "duration": 14700,
+          "synopsis": null,
+          "playableType": "movies",
+          "genre": null,
+          "subGenres": [],
+          "tip": false,
+          "rating": null,
+          "imageUrl": null,
+          "imageFormat": null,
+          "videoOnDemandLinks": [],
+          "entitlements": [],
+          "lastUpdated": "2026-08-10T20:03:10.236",
+          "fromIso": "2026-08-11T00:00:00",
+          "toIso": "2026-08-11T04:05:00"
+        },
+        {
+          "uuid": "1b4a57bf-d199-4263-bec5-67466a744d0f",
+          "playableUuid": "e75f80c1-2c04-41f1-ba71-c190ac0009c2",
+          "programUuid": "50803719-c589-421d-a578-249e3759c32d",
+          "channelUuid": "d8659669-b964-414c-aa9c-e31d8d15696b",
+          "from": 1786421100000,
+          "to": 1786421400000,
+          "technicalFrom": 1786421078520,
+          "technicalTo": 1786421384040,
+          "contentFrom": 1786421078520,
+          "contentTo": 1786421381040,
+          "transmissionId": null,
+          "title": "Kabouter Plop",
+          "alternativeMainTitle": "Kabouter Plop",
+          "alternativeDetailTitle": "Een gat in het dak",
+          "productionCountries": [
+            {
+              "code": "BEL",
+              "name": "België"
+            }
+          ],
+          "live": false,
+          "rerun": false,
+          "prime": false,
+          "pillar": null,
+          "legalIcons": [
+            "PGAL"
+          ],
+          "descriptors": [],
+          "duration": 300,
+          "synopsis": "Het regent pijpenstelen en kabouter Lui valt er heerlijk van in slaap. Lang duurt zijn rust niet: hij wordt wakker van dikke regendruppels op zijn gezicht!",
+          "playableType": "episodes",
+          "genre": "Reeks",
+          "subGenres": [
+            "Kleuter"
+          ],
+          "tip": false,
+          "rating": null,
+          "imageUrl": "https://images3.persgroep.net/rcs/SiNT8MdHiiJ_5aad9t0s6S8KVmU/diocontent/175276626/_fill/600/400?appId=da11c75db9b73ea0f41f0cd0da631c71",
+          "imageFormat": "LANDSCAPE",
+          "videoOnDemandLinks": [
+            {
+              "url": "https://link.vtmgo.be/vtmgo/kabouter-plop~50803719-c589-421d-a578-249e3759c32d",
+              "brand": "VTM_GO",
+              "title": "Kijk op VTM GO",
+              "iconImageUrl": "https://images0.persgroep.net/rcs/oXi5aztZ9qH2J9ppquRfYFLpxSI/diocontent/175395123/_fitheight/150?appId=da11c75db9b73ea0f41f0cd0da631c71"
+            }
+          ],
+          "entitlements": [],
+          "lastUpdated": "2026-08-10T20:03:10.312",
+          "fromIso": "2026-08-11T04:05:00",
+          "toIso": "2026-08-11T04:10:00"
+        },
+        {
+          "uuid": "e46bd7ac-503f-4310-a7dc-0d8bc6c06b1e",
+          "playableUuid": "4bfc7b41-dd60-4676-a99d-030ac8d0693e",
+          "programUuid": "2f1919f0-fc95-4ccf-9d35-b28a90111ddd",
+          "channelUuid": "d8659669-b964-414c-aa9c-e31d8d15696b",
+          "from": 1786425660000,
+          "to": 1786427100000,
+          "technicalFrom": 1786425837640,
+          "technicalTo": 1786427247640,
+          "contentFrom": 1786425837640,
+          "contentTo": 1786427226240,
+          "transmissionId": null,
+          "title": "VLOGLAB #Stories",
+          "alternativeMainTitle": "VLOGLAB Forever #Stories",
+          "alternativeDetailTitle": null,
+          "productionCountries": [
+            {
+              "code": "BEL",
+              "name": "België"
+            }
+          ],
+          "live": false,
+          "rerun": false,
+          "prime": false,
+          "pillar": null,
+          "legalIcons": [
+            "PG6",
+            "PP"
+          ],
+          "descriptors": [
+            "VIOLENCE",
+            "SCARY",
+            "STRONG_LANGUAGE"
+          ],
+          "duration": 1440,
+          "synopsis": "De buren proberen Stien te koppelen aan Edward. Chakirs date met Vivi loopt anders dan verwacht, terwijl Tristan en Cédric hem bespioneren. Chloé zit in strafstudie en Steffi ontdekt een groot geheim.",
+          "playableType": "episodes",
+          "genre": "Reeks",
+          "subGenres": [
+            "Drama"
+          ],
+          "tip": false,
+          "rating": null,
+          "imageUrl": "https://images3.persgroep.net/rcs/Fvmm9YlRdCjp2jbnu_Fdit0La28/diocontent/225287285/_fill/600/400?appId=da11c75db9b73ea0f41f0cd0da631c71",
+          "imageFormat": "LANDSCAPE",
+          "videoOnDemandLinks": [
+            {
+              "url": "https://link.vtmgo.be/vtmgo/vloglab-stories~2f1919f0-fc95-4ccf-9d35-b28a90111ddd",
+              "brand": "VTM_GO",
+              "title": "Kijk op VTM GO",
+              "iconImageUrl": "https://images0.persgroep.net/rcs/oXi5aztZ9qH2J9ppquRfYFLpxSI/diocontent/175395123/_fitheight/150?appId=da11c75db9b73ea0f41f0cd0da631c71"
+            }
+          ],
+          "entitlements": [],
+          "lastUpdated": "2026-08-10T20:03:10.673",
+          "fromIso": "2026-08-11T05:21:00",
+          "toIso": "2026-08-11T05:45:00"
+        },
+        {
+          "uuid": "557a8fb9-91ed-4b2a-9f4b-f30ec611721a",
+          "playableUuid": "5ed33f37-8936-4d87-a7af-0e3d090b1da9",
+          "programUuid": "3975934b-22a2-4b4d-a10c-e2727448a6fe",
+          "channelUuid": "d8659669-b964-414c-aa9c-e31d8d15696b",
+          "from": 1786446000000,
+          "to": 1786447800000,
+          "technicalFrom": 1786445985000,
+          "technicalTo": 1786447927240,
+          "contentFrom": 1786445985000,
+          "contentTo": 1786447726600,
+          "transmissionId": null,
+          "title": "VTM NIEUWS",
+          "alternativeMainTitle": "VTM NIEUWS",
+          "alternativeDetailTitle": "VTM NIEUWS 13u - 11/08/2026",
+          "productionCountries": [
+            {
+              "code": "BEL",
+              "name": "België"
+            }
+          ],
+          "live": true,
+          "rerun": false,
+          "prime": false,
+          "pillar": null,
+          "legalIcons": [],
+          "descriptors": [],
+          "duration": 1800,
+          "synopsis": "Nieuws van de dag met achtergrondinformatie, gevolgd door uitgebreide sportverslaggeving.",
+          "playableType": "episodes",
+          "genre": "Nieuws",
+          "subGenres": [
+            "Actua"
+          ],
+          "tip": false,
+          "rating": null,
+          "imageUrl": "https://images0.persgroep.net/rcs/S3KOl0vqRQwixOjheXCJU6Q9URs/diocontent/276558947/_fill/600/400?appId=da11c75db9b73ea0f41f0cd0da631c71",
+          "imageFormat": "LANDSCAPE",
+          "videoOnDemandLinks": [],
+          "entitlements": [],
+          "lastUpdated": "2026-08-11T11:30:10.176",
+          "fromIso": "2026-08-11T11:00:00",
+          "toIso": "2026-08-11T11:30:00"
+        }
+      ],
+      "liveStreamLinks": [
+        {
+          "url": "https://link.vtmgo.be/vtmgo/live-kijken/vtm",
+          "brand": "VTM_GO",
+          "title": "Kijk op VTM GO",
+          "iconImageUrl": "https://images0.persgroep.net/rcs/oXi5aztZ9qH2J9ppquRfYFLpxSI/diocontent/175395123/_fitheight/150?appId=da11c75db9b73ea0f41f0cd0da631c71"
+        }
+      ],
+      "order": 1
+    },
+    {
+      "name": "VTM 2",
+      "seoKey": "vtm2",
+      "uuid": "ea826456-6b19-4612-8969-864d1c818347",
+      "channelLogoUrl": "https://images3.persgroep.net/rcs/2Gdw5G9y9o7N1R2QVL0DzfuTn7k/diocontent/248189476/_fitwidth/500?appId=da11c75db9b73ea0f41f0cd0da631c71",
+      "broadcasts": [
+        {
+          "uuid": "d4613fb3-f017-4a5c-9d65-7ba2afc71bf0",
+          "playableUuid": "36fb7a18-0cf7-4cf7-bd9c-7f726b40355b",
+          "programUuid": null,
+          "channelUuid": "ea826456-6b19-4612-8969-864d1c818347",
+          "from": 1786462800000,
+          "to": 1786471800000,
+          "technicalFrom": 1786462800000,
+          "technicalTo": 1786471841320,
+          "contentFrom": 1786462800000,
+          "contentTo": 1786471650600,
+          "transmissionId": null,
+          "title": "FK Bodø/Glimt - Union Saint-Gilloise: voorronde Champions League",
+          "alternativeMainTitle": "UEFA Champions League: FK Bodø/Glimt - Union Saint-Gilloise",
+          "alternativeDetailTitle": "UEFA Champions League: FK Bodø/Glimt - Union Saint-Gilloise",
+          "productionCountries": [
+            {
+              "code": "BEL",
+              "name": "België"
+            }
+          ],
+          "live": true,
+          "rerun": false,
+          "prime": false,
+          "pillar": null,
+          "legalIcons": [],
+          "descriptors": [],
+          "duration": 9000,
+          "synopsis": "Liveverslag van FK Bodø/Glimt - Royale Union Saint-Gilloise, terugwedstrijd in de derde kwalificatieronde van de UEFA Champions League, vanuit het Aspmyra Stadion in Bodø, Noorwegen.",
+          "playableType": "movies",
+          "genre": "Sport",
+          "subGenres": [
+            "Voetbal"
+          ],
+          "tip": true,
+          "rating": null,
+          "imageUrl": null,
+          "imageFormat": null,
+          "videoOnDemandLinks": [],
+          "entitlements": [],
+          "lastUpdated": "2026-08-10T20:30:10.358",
+          "fromIso": "2026-08-11T15:40:00",
+          "toIso": "2026-08-11T18:10:00"
+        }
+      ],
+      "liveStreamLinks": [
+        {
+          "url": "https://link.vtmgo.be/vtmgo/live-kijken/vtm2",
+          "brand": "VTM_GO",
+          "title": "Kijk op VTM GO",
+          "iconImageUrl": "https://images0.persgroep.net/rcs/oXi5aztZ9qH2J9ppquRfYFLpxSI/diocontent/175395123/_fitheight/150?appId=da11c75db9b73ea0f41f0cd0da631c71"
+        }
+      ],
+      "order": 2
+    },
+    {
+      "name": "VTM 3",
+      "seoKey": "vtm3",
+      "uuid": "5f8f153a-72cb-476c-9e7b-4802808470b2",
+      "channelLogoUrl": "https://images4.persgroep.net/rcs/jQtIKXGH6kWKzinX5Wiu0jRXVvo/diocontent/248189473/_fitwidth/500?appId=da11c75db9b73ea0f41f0cd0da631c71",
+      "broadcasts": [],
+      "liveStreamLinks": [
+        {
+          "url": "https://link.vtmgo.be/vtmgo/live-kijken/vtm3",
+          "brand": "VTM_GO",
+          "title": "Kijk op VTM GO",
+          "iconImageUrl": "https://images0.persgroep.net/rcs/oXi5aztZ9qH2J9ppquRfYFLpxSI/diocontent/175395123/_fitheight/150?appId=da11c75db9b73ea0f41f0cd0da631c71"
+        }
+      ],
+      "order": 3
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <channels>
-  <channel site="vtm.be" site_id="qmusic" lang="nl" xmltv_id="QmusicVlaanderen.be@SD">Qmusic</channel>
-  <channel site="vtm.be" site_id="vtm" lang="nl" xmltv_id="VTM.be@SD">VTM</channel>
-  <channel site="vtm.be" site_id="vtm2" lang="nl" xmltv_id="VTM2.be@SD">VTM 2</channel>
-  <channel site="vtm.be" site_id="vtm3" lang="nl" xmltv_id="VTM3.be@SD">VTM 3</channel>
-  <channel site="vtm.be" site_id="vtm4" lang="nl" xmltv_id="VTM4.be@SD">VTM 4</channel>
-  <channel site="vtm.be" site_id="vtmgold" lang="nl" xmltv_id="VTMGold.be@SD">VTM Gold</channel>
-  <channel site="vtm.be" site_id="vtmnonstop" lang="nl" xmltv_id="">VTM NON-STOP Dokters</channel>
+  <channel site="vtm.be" site_id="qmusic" lang="nl" logo="https://images3.persgroep.net/rcs/NRXqV0B7PY0Lo3p_WJLD3PwrFVo/diocontent/154174236/_fitwidth/500?appId=da11c75db9b73ea0f41f0cd0da631c71" xmltv_id="QmusicVlaanderen.be">Qmusic</channel>
+  <channel site="vtm.be" site_id="vtm" lang="nl" logo="https://images4.persgroep.net/rcs/5z5qDnGS5kcM_mNLtWSlF_JPvd0/diocontent/248189477/_fitwidth/500?appId=da11c75db9b73ea0f41f0cd0da631c71" xmltv_id="VTM.be">VTM</channel>
+  <channel site="vtm.be" site_id="vtm2" lang="nl" logo="https://images3.persgroep.net/rcs/2Gdw5G9y9o7N1R2QVL0DzfuTn7k/diocontent/248189476/_fitwidth/500?appId=da11c75db9b73ea0f41f0cd0da631c71" xmltv_id="VTM2.be">VTM 2</channel>
+  <channel site="vtm.be" site_id="vtm3" lang="nl" logo="https://images4.persgroep.net/rcs/jQtIKXGH6kWKzinX5Wiu0jRXVvo/diocontent/248189473/_fitwidth/500?appId=da11c75db9b73ea0f41f0cd0da631c71" xmltv_id="VTM3.be">VTM 3</channel>
+  <channel site="vtm.be" site_id="vtm4" lang="nl" logo="https://images0.persgroep.net/rcs/zf--LnX9mI-3Mzqj9JMkqTmz90M/diocontent/248189474/_fitwidth/500?appId=da11c75db9b73ea0f41f0cd0da631c71" xmltv_id="VTM4.be">VTM 4</channel>
+  <channel site="vtm.be" site_id="vtmgold" lang="nl" logo="https://images1.persgroep.net/rcs/gT28NMLKz9GAjyRtn0ogJx7t3Eg/diocontent/248189475/_fitwidth/500?appId=da11c75db9b73ea0f41f0cd0da631c71" xmltv_id="VTMGold.be">VTM GOLD</channel>
+  <channel site="vtm.be" site_id="vtmxmas" lang="nl" logo="https://images3.persgroep.net/rcs/FakOOfV00zqWjpgJLoSSMrjSGQw/diocontent/268265104/_fitwidth/500?appId=da11c75db9b73ea0f41f0cd0da631c71" xmltv_id="VTMSeries.be">VTM series</channel>
 </channels>

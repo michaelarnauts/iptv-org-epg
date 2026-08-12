@@ -8,6 +8,12 @@ https://vtm.be/tv-gids
 npm run grab --- --sites=vtm.be
 ```
 
+### Update channel list
+
+```sh
+npm run channels:parse --- --config=./sites/vtm.be/vtm.be.config.js --output=./sites/vtm.be/vtm.be.channels.xml
+```
+
 ### Test
 
 ```sh
