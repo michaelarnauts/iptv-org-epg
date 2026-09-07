@@ -40,6 +40,7 @@ module.exports = {
         title: item.title,
         subTitle: detail.episodeName || item.seriesName,
         icon: parseIcon(item),
+        image: parseImage(item),
         description: detail.longDescription || detail.shortDescription,
         category: detail.genres,
         actors: detail.actors,
@@ -85,7 +86,7 @@ async function loadItems({ content, channel, date }) {
     await doFetch(missing, (url, res) => cacheSegment(url, res))
   }
 
-  const items = urls.flatMap(url => findEvents(segments[url], channel))
+  const items = urls.flatMap(url => findEvents(segments[url], channel)).filter(isBroadcast)
 
   // an event that spans a boundary is listed twice: by both segments, or by both days
   return uniqueItems(items, channel, date)
@@ -139,6 +140,12 @@ function parseStart(item) {
 
 function parseStop(item) {
   return dayjs.unix(item.endTime)
+}
+
+// telenet fills the hours a channel is off air with "Geen uitzending", often several in a row.
+// Nothing is behind them, so they are dropped and the guide simply has a hole there.
+function isBroadcast(item) {
+  return !/^geen uitzending\b/i.test(item.title || '')
 }
 
 function findEvents(entries, channel) {
@@ -218,6 +225,37 @@ function parseLangCodes(languages) {
   return [...new Set(languages.map(language => language.lang).filter(Boolean))]
 }
 
+// Three assets hang off one event id. Only the poster is always there: over a day of the guide,
+// episodeStill answered for 91% of programmes and titleTreatment for 66%, and nothing in the event
+// says which, so all three are emitted and a reader has to expect a 404.
+//
+// Poster first because the DTD asks for the most authoritative image first -- though Telenet's own
+// player prefers the still, its bundle carrying the literal list ['episodeStill','posterTile'].
+const IMAGE_INTENTS = [
+  // Key art cropped to 2:3, always from the season or the movie, never per episode.
+  { intent: 'posterTile', type: 'poster', orient: 'P' },
+  // 16:9; a real production still for two thirds, season or show artwork for the rest. The app
+  // picks the landscape image on `type` alone, so dropping this one hides it there silently.
+  { intent: 'episodeStill', type: 'still', orient: 'L' },
+  // A transparent wordmark, which is none of the DTD's five types, so `system` is all it has.
+  { intent: 'titleTreatment', orient: 'L' },
+]
+
 function parseIcon(item) {
-  return `${API_IMAGE_ENDPOINT}/intent/${item.id}/posterTile`
+  return imageUrl(item, 'posterTile')
+}
+
+function imageUrl(item, intent) {
+  return `${API_IMAGE_ENDPOINT}/intent/${item.id}/${intent}`
+}
+
+// <icon> repeats the poster because the two elements are read by different clients: <icon> has only
+// a src, while <image> is the one that can say what the picture is.
+function parseImage(item) {
+  return IMAGE_INTENTS.map(({ intent, type, orient }) => ({
+    ...(type ? { type } : {}),
+    orient,
+    system: intent,
+    value: imageUrl(item, intent),
+  }))
 }

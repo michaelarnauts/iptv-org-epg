@@ -64,6 +64,28 @@ it('can parse response', async () => {
     stop: '2022-10-30T01:44:00.000Z',
     title: 'Queer as Folk USA',
     icon: 'https://staticqbr-prod-be.gnp.cloud.telenet.tv/image-service/intent/crid:~~2F~~2Fgn.tv~~2F2459095~~2FEP036477800004,imi:0a2f4207b03c16c70b7fb3be8e07881aafe44106/posterTile',
+    image: [
+      {
+        type: 'poster',
+        orient: 'P',
+        system: 'posterTile',
+        value:
+          'https://staticqbr-prod-be.gnp.cloud.telenet.tv/image-service/intent/crid:~~2F~~2Fgn.tv~~2F2459095~~2FEP036477800004,imi:0a2f4207b03c16c70b7fb3be8e07881aafe44106/posterTile'
+      },
+      {
+        type: 'still',
+        orient: 'L',
+        system: 'episodeStill',
+        value:
+          'https://staticqbr-prod-be.gnp.cloud.telenet.tv/image-service/intent/crid:~~2F~~2Fgn.tv~~2F2459095~~2FEP036477800004,imi:0a2f4207b03c16c70b7fb3be8e07881aafe44106/episodeStill'
+      },
+      {
+        orient: 'L',
+        system: 'titleTreatment',
+        value:
+          'https://staticqbr-prod-be.gnp.cloud.telenet.tv/image-service/intent/crid:~~2F~~2Fgn.tv~~2F2459095~~2FEP036477800004,imi:0a2f4207b03c16c70b7fb3be8e07881aafe44106/titleTreatment'
+      }
+    ],
     description:
       "Justin belandt in de gevangenis, Brian en Brandon banen zich een weg door de lijst, Ben treurt, Melanie en Lindsay proberen een interne scheiding en Emmett's stalker onthult zichzelf.",
     category: ['Dramaserie', 'LHBTI'],
@@ -148,4 +170,35 @@ it('only lists a broadcast running past midnight on the day it starts', async ()
 
   // and the day that claimed it keeps returning it
   expect(await parser({ content, channel, date: first })).toHaveLength(1)
+})
+
+it('drops the "Geen uitzending" fillers, however many stand in a row', async () => {
+  // a date and a channel of their own, so the segments cached by the tests above are not read
+  const fillerDate = dayjs.utc('2022-12-10', 'YYYY-MM-DD').startOf('d')
+  const fillerChannel = { site_id: 'filler', xmltv_id: 'Filler.be', lang: 'nl' }
+  const event = (id, title, hour) => ({
+    id,
+    title,
+    startTime: fillerDate.add(hour, 'h').unix(),
+    endTime: fillerDate.add(hour + 1, 'h').unix()
+  })
+  const content = JSON.stringify({
+    entries: [
+      {
+        channelId: fillerChannel.site_id,
+        events: [
+          event('off-1', 'Geen uitzending', 1),
+          event('off-2', 'Geen uitzending', 2),
+          event('show', 'Elementary', 3),
+          event('off-3', 'geen uitzending - PLAY', 4)
+        ]
+      }
+    ]
+  })
+
+  axios.get.mockImplementation(() => Promise.resolve({ data: '' }))
+
+  const results = await parser({ content, channel: fillerChannel, date: fillerDate })
+
+  expect(results.map(p => p.title)).toEqual(['Elementary'])
 })
