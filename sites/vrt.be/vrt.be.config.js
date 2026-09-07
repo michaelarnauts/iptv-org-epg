@@ -23,6 +23,16 @@ fragment epgTileFragment on Tile {
         link
       }
     }
+    actionItems {
+      action {
+        ... on LinkAction {
+          link
+        }
+      }
+    }
+    trackingData {
+      data
+    }
   }
 }
 `
@@ -78,18 +88,6 @@ query LiveSnapshot($listId: ID!) {
           cursor
           node {
             ...epgTileFragment
-            ... on ITile {
-              actionItems {
-                action {
-                  ... on LinkAction {
-                    link
-                  }
-                }
-              }
-            }
-            ... on EpisodeTile {
-              whatsonId
-            }
           }
         }
       }
@@ -97,57 +95,6 @@ query LiveSnapshot($listId: ID!) {
   }
 }
 ${TILE_FRAGMENT}`
-
-const PROGRAM_LISTS_QUERY = `
-query ProgramLists($id: ID!) {
-  page(id: $id) {
-    ... on ProgramPage {
-      menu {
-        items {
-          components {
-            __typename
-            ... on PaginatedTileList {
-              listId
-            }
-            ... on ContainerNavigation {
-              items {
-                title
-                active
-                objectId
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}`
-
-const EPISODE_LIST_QUERY = `
-query EpisodeList($listId: ID!, $after: ID) {
-  list(listId: $listId) {
-    ... on PaginatedTileList {
-      paginatedItems(first: 50, after: $after) {
-        edges {
-          node {
-            ... on EpisodeTile {
-              whatsonId
-              action {
-                ... on LinkAction {
-                  link
-                }
-              }
-            }
-          }
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
-      }
-    }
-  }
-}`
 
 const CHANNELS_QUERY = `
 query ProgramGuidePage($pageId: ID!) {
@@ -177,8 +124,16 @@ query ProgramGuidePage($pageId: ID!) {
 }
 `
 const SITE_URL = 'https://www.vrt.be'
+// Radio only: a programme's own page, read off the episode link.
+// /vrtmax/luister/radio/a/all-that-jazz~31-76/all-that-jazz~31-31884-0/ belongs to the season-less
+// /vrtmax/luister/radio/a/all-that-jazz~31-76/. Television does not need this — see parseProgramLink.
+const RADIO_PROGRAM_PATH_RE = /^(\/vrtmax\/luister\/[^/]+\/[^/]+\/[^/]+)\//
+// A tile's actions also hold "Delen" and, on the airing slot, the livestream; only these two shapes
+// are a page of a programme.
+const PROGRAM_LINK_RE = /^\/vrtmax\/(?:a-z|luister)\//
 const API_ENDPOINT = 'https://www.vrt.be/vrtnu-api/graphql/public/v1'
-// The airing program's real url only surfaces on the non-public schema (whatsonId + actionItems).
+// Where the airing program's snapshot list is asked for. The public schema answers it with the same
+// tile today (checked 2026-09-07); this stays on the schema it came from.
 const PRIVATE_API_ENDPOINT = 'https://www.vrt.be/vrtnu-api/graphql/v1'
 const MAX_PAGE_REQUESTS = 20
 const API_HEADERS = {
@@ -225,7 +180,7 @@ module.exports = {
       const start = parseCursor(edge.cursor)
       if (!start) return
 
-      items.push({ start, node, url: parseUrl(node.action) })
+      items.push({ start, node, url: buildUrls(parseEpisodeUrl(node, start), parseProgramUrl(node)) })
     })
 
     const currentEdge = await loadCurrentEdge(page.current, [...previousEdges, ...nextEdges])
@@ -234,7 +189,7 @@ module.exports = {
       items.push({
         start: currentStart,
         node: currentEdge.node,
-        url: await resolveCurrentUrl(currentEdge.node)
+        url: resolveCurrentUrls(currentEdge.node, currentStart)
       })
     }
 
@@ -335,13 +290,83 @@ function parseChannelCode(cursor) {
 }
 
 function parseUrl(action) {
-  return toProgramUrl(action?.link)
+  return toEpisodeUrl(action?.link)
 }
 
-// Only a program's own page is useful downstream. A tile can also link to the channel's livestream
-// (that is what whatever is airing does) or to an /vrtmax/event/ slot, whose id is just the guide
-// timeslot in base64 — neither one plays.
-function toProgramUrl(link) {
+// What a programme gets in the guide: the episode that airs as <url system="episode">, and the
+// programme it belongs to as <url system="program">. Both are named, so a reader picks the one it
+// wants rather than counting elements; the episode stays first for one that does not look. Either
+// half may be missing on its own.
+function buildUrls(episodeUrl, programUrl) {
+  const urls = []
+  if (episodeUrl) urls.push({ system: 'episode', value: episodeUrl })
+
+  const program = programUrl || toRadioProgramUrl(episodeUrl)
+  if (program) urls.push({ system: 'program', value: program })
+
+  return urls
+}
+
+// The tile's "Ga naar dit programma" action, which is the programme page VRT itself points at. A
+// television tile has it whether or not the episode exists yet, so a slot still to air — every news
+// bulletin, and anything else not published ahead of broadcast — keeps a programme url where before
+// it had none. Radio tiles carry no actionItems at all, and are the reason toRadioProgramUrl stays.
+function parseProgramLink(node) {
+  const links = (node?.actionItems || []).map(item => item?.action?.link)
+
+  return links.find(link => PROGRAM_LINK_RE.test(link)) || null
+}
+
+function parseProgramUrl(node) {
+  const link = parseProgramLink(node)
+
+  return link ? `${SITE_URL}${link}` : null
+}
+
+function toRadioProgramUrl(episodeUrl) {
+  const match = episodeUrl ? episodeUrl.replace(SITE_URL, '').match(RADIO_PROGRAM_PATH_RE) : null
+
+  return match ? `${SITE_URL}${match[1]}/` : null
+}
+
+// The tile's own action, and its tracking payload only where that action names no episode. The two
+// say the same thing wherever both are there -- byte for byte, on 275 of 275 tiles -- so the action
+// stays the authority and $tapu only fills in.
+//
+// **Only once the slot has started.** $tapu names the episode page whether or not it has been
+// published, and for a broadcast still to come that page does not exist yet: it answers as an error
+// page and the guide would be claiming there is something to watch. The page appears about a minute
+// into the broadcast -- the 13:00 news answered as an error page at 12:56 and as itself at 13:01,
+// Bumba the same -- and until then the slot keeps what the action gives it, which for anything with
+// a repeat behind it is the episode anyway. Nothing is lost by waiting: today's slots are grabbed
+// again every hour.
+function parseEpisodeUrl(node, start) {
+  const fromAction = parseUrl(node?.action)
+  if (fromAction || !hasStarted(start)) return fromAction
+
+  return parseTrackingEpisodeUrl(node)
+}
+
+function hasStarted(start) {
+  return !!start && start.valueOf() <= Date.now()
+}
+
+// $tapu, the page a tile stands for.
+function parseTrackingEpisodeUrl(node) {
+  let path
+  try {
+    path = JSON.parse(node?.trackingData?.data || '{}').$tapu
+  } catch {
+    return null
+  }
+
+  return toEpisodeUrl(path)
+}
+
+// Only a page that plays something is useful downstream. A tile can also link to the channel's
+// livestream (that is what whatever is airing does) or to an /vrtmax/event/ slot, whose id is just
+// the guide timeslot in base64 — neither one plays.
+function toEpisodeUrl(link) {
   if (!link) return null
   if (link.startsWith('/vrtmax/livestream/') || link.startsWith('/vrtmax/event/')) return null
 
@@ -374,94 +399,25 @@ async function loadCurrentEdge(current, edges) {
   return data?.data?.list?.paginatedItems?.edges?.[0] || null
 }
 
-// The guide never exposes the airing slot's own /vrtmax/a-z/ url (its tile links to the livestream).
-// Recover it by matching the tile's whatsonId in the episode lists of its program page.
-async function resolveCurrentUrl(node) {
-  const whatsonId = node?.whatsonId
-  const programLink = (node?.actionItems || [])
-    .map(item => item?.action?.link)
-    .find(link => link?.startsWith('/vrtmax/a-z/'))
-  if (!whatsonId || !programLink) return null
+// The airing slot's tile links to the livestream instead of to the episode, so parseEpisodeUrl
+// falls through to the tracking payload. It is given the start for the same reason every other
+// tile is: VRT's "what is on now" list runs a few minutes ahead of the schedule -- at 12:56 it
+// already answered with the 13:00 news -- and that slot has not started. Television gets its programme page from the tile's own
+// action as always; radio, which has no actions at all, derives it off the episode url.
+//
+// This replaced a search that matched the tile's whatsonId against the episode lists of its
+// program page. Measured over 18 tiles whose own action link gives the answer away, treated as if
+// they were airing (2026-09-07, three channels): trackingData named the right episode 18 times for
+// nothing, the search 10 times for 36 requests. The search never answered wrongly, it just did not
+// find repeats and anything outside the season it looked in -- Thuis, Tik Tak, Blokken. The page
+// $tapu names carries the tile's whatsonId back as $epci, so it is the same episode, not a
+// lookalike.
+function resolveCurrentUrls(node, start) {
+  const programLink = parseProgramLink(node)
 
-  const season = parseSeason(node.primaryMeta)
-  for (const listId of await loadProgramListIds(programLink, season)) {
-    const url = toProgramUrl(await findEpisodeLink(listId, whatsonId))
-    if (url) return url
-  }
-
-  return null
+  return buildUrls(parseEpisodeUrl(node, start), programLink ? `${SITE_URL}${programLink}` : null)
 }
 
-// A program page carries flat lists plus (for multi-season programs) one episode list per season,
-// nested under a second ContainerNavigation. The episode airs from exactly one season, so only that
-// season's list is searched, alongside the program's flat lists.
-async function loadProgramListIds(programLink, season) {
-  const data = await postPrivate(PROGRAM_LISTS_QUERY, { id: programLink })
-  const items = data?.data?.page?.menu?.items || []
-
-  const flatLists = []
-  const seasonLists = []
-  items.forEach(item => {
-    ;(item.components || []).forEach(component => {
-      if (component?.__typename === 'PaginatedTileList' && component.listId) {
-        flatLists.push(component.listId)
-      }
-      if (component?.__typename === 'ContainerNavigation') {
-        ;(component.items || []).forEach(tab => {
-          const listId = buildSeasonListId(tab)
-          if (listId) seasonLists.push({ listId, number: seasonNumber(tab.title) })
-        })
-      }
-    })
-  })
-
-  const seasons =
-    season == null ? [] : seasonLists.filter(s => s.number === season).map(s => s.listId)
-  return [...seasons, ...flatLists]
-}
-
-// Season tabs only inline a usable listId for the active season; the others are derived from the
-// tab's objectId. The list wrapper is o%35 with a trailing marker that is b%0 for the active season
-// and b%1 for every other one.
-function buildSeasonListId(tab) {
-  if (!tab?.objectId?.startsWith('$')) return null
-
-  const inner = Buffer.from(tab.objectId.slice(1), 'base64').toString()
-  const index = inner.match(/\|(\d+)\|%$/)?.[1]
-  if (!index) return null
-
-  const marker = tab.active ? 0 : 1
-  return `$${Buffer.from(`o%35|${inner}|${index}|b%${marker}|n%1%`).toString('base64')}`
-}
-
-function seasonNumber(title) {
-  const match = (title || '').match(/\d+/)
-  return match ? parseInt(match[0], 10) : null
-}
-
-async function findEpisodeLink(listId, whatsonId) {
-  let after = null
-  for (let requests = 0; requests < MAX_PAGE_REQUESTS; requests++) {
-    const data = await postPrivate(EPISODE_LIST_QUERY, { listId, after })
-    const items = data?.data?.list?.paginatedItems
-    if (!items) return null
-
-    const match = (items.edges || []).find(edge => edge.node?.whatsonId === whatsonId)
-    if (match) return match.node.action?.link || null
-
-    if (!items.pageInfo?.hasNextPage) return null
-    after = items.pageInfo.endCursor
-  }
-
-  return null
-}
-
-function postPrivate(query, variables) {
-  return axios
-    .post(PRIVATE_API_ENDPOINT, { query, variables }, { headers: API_HEADERS })
-    .then(r => r.data)
-    .catch(console.error)
-}
 
 // The API caps every list at 50 items, whatever `first` asks for, so busy channels like Ketnet need
 // to be paged through with the cursor from pageInfo.
