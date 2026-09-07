@@ -43,10 +43,38 @@ it('can parse response', () => {
     episode: 2,
     image:
       'https://images.play.tv/styles/0efe8c9a1a45511fe53ad47b02b82b32f480d1819874e6fb6d37c54cf9a2f5ea/meta/huizenjagers-y07-e02-f0274581mp400122602still004-qgsi74-qh79ly-qh79ly.jpg?style=W10=&sign=4e0abe87bc5d2922acf797fe1d11c9d64f80a3a1ec17bb9255c564e642605651',
-    url: 'https://www.play.tv/video/huizenjagers/huizenjagers-s7/huizenjagers-s7-aflevering-2',
+    url: [
+      {
+        system: 'episode',
+        value: 'https://www.play.tv/video/huizenjagers/huizenjagers-s7/huizenjagers-s7-aflevering-2'
+      },
+      { system: 'program', value: 'https://www.play.tv/huizenjagers' }
+    ],
     start: '2026-03-18T10:40:00.000Z',
     stop: '2026-03-18T11:30:00.000Z'
   })
+})
+
+it('takes the program url off a film, whose path carries no season or episode', () => {
+  const stream = JSON.stringify({
+    program: {
+      programTitle: 'V for Vendetta',
+      timestamp: 1774043400,
+      duration: 8100,
+      latestVideo: true,
+      video: { data: { path: '/video/v-for-vendetta' } }
+    }
+  })
+  const results = parser({
+    content: `<script>self.__next_f.push([1,${JSON.stringify(stream)}])</script>`,
+    channel,
+    date
+  })
+
+  expect(results[0].url).toEqual([
+    { system: 'episode', value: 'https://www.play.tv/video/v-for-vendetta' },
+    { system: 'program', value: 'https://www.play.tv/v-for-vendetta' }
+  ])
 })
 
 it('can parse channel list', async () => {
